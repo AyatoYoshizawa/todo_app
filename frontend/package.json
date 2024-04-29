@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@microsoft/kiota-abstractions": "^1.0.0-preview.51",
+    "@microsoft/kiota-http-fetchlibrary": "^1.0.0-preview.50",
+    "@microsoft/kiota-serialization-form": "^1.0.0-preview.40",
+    "@microsoft/kiota-serialization-json": "^1.0.0-preview.51",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
