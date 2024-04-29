@@ -1,10 +1,21 @@
-from pydantic import BaseModel
-from typing import Optional
-from datetime import datetime
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-class Task(BaseModel):
-    __tablename__ = "task"
-    id: Optional[int] = None
-    title: str
-    status: int
-    deadline: datetime
+from database import engine
+
+
+# SQLAlchemy のモデル
+
+class Base(DeclarativeBase):
+    pass
+
+
+class Task(Base):
+    __tablename__ = 'task'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    status: Mapped[int] = mapped_column(Integer, nullable=False, index=True, default=0)
+
+
+Base.metadata.create_all(bind=engine)
