@@ -6,7 +6,9 @@ from database import SessionLocal, engine
 from models import Task
 from database import Base
 
-app = FastAPI()
+app = FastAPI(
+    openapi_version=3.0
+)
 
 Base.metadata.create_all(bind=engine)
 
@@ -17,6 +19,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+# テスト
+@app.get('/')
+def test():
+    return {'message': 'Hello World by todo_app'}
 
 # 一覧を取得
 @app.get("/api/v1/tasks", response_model=List[Task])
