@@ -8,8 +8,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Task } from '../api/axios';
 import { Button, Stack } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 const Tasks = () => {
+    const navigate = useNavigate();
+    
     const query = useQuery<Array<Task>>('tasks', () => {
         return API.instance.getTasksApiV1TasksListGet();
     }, {
@@ -22,6 +25,11 @@ const Tasks = () => {
         }
     });
 
+
+    const onCreate = () => {
+        navigate('/create');
+
+    }
 
     const onEdit = (task: Task) => {
         console.log('EDIT', task);
@@ -36,6 +44,10 @@ const Tasks = () => {
     return (
         <>
             <h1>一覧</h1>
+
+            <Stack spacing={10} direction='row'>
+                <Button variant='contained' color='primary' onClick={onCreate}>新規登録</Button>
+            </Stack>
 
             {query.isLoading || query.isFetching &&
                 <CircularProgress />

@@ -7,6 +7,7 @@ import AppBar from '@mui/material/AppBar';
 import Typography from '@mui/material/Typography';
 import { Box, Toolbar } from '@mui/material';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import TaskCreate from './components/TaskkCreate';
 
 function App() {
   const darkTheme = createTheme({
@@ -34,6 +35,7 @@ function App() {
               <Routes>
                 <Route index element={<Tasks />} />
                 <Route path="*" element={<h1>ページが存在しません</h1>} />
+                <Route path="/create" element={<TaskCreate />}/>
               </Routes>
             </BrowserRouter>
           </Box>
