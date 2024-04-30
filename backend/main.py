@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -11,6 +12,11 @@ from models import Task
 
 app = FastAPI()
 app.openapi_version = '3.0.3'
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+)
 
 
 # DBセッションの依存性注入
@@ -39,7 +45,6 @@ async def get_tasks(title: Optional[str] = None, status: Optional[int] = None):
     :param status:
     :return:
     """
-    title = title.strip()
     query = select(Task)
 
     if title:
@@ -50,8 +55,9 @@ async def get_tasks(title: Optional[str] = None, status: Optional[int] = None):
 
     db = SessionLocal()
     task_list = db.scalars(query.order_by(Task.id.asc())).all()
+    task_schema_list = [schemas.Task(**task.__dict__) for task in task_list]
     db.close()
-    return task_list
+    return task_schema_list
 
 
 @app.get('/api/v1/tasks/detail/{task_id}', response_model=schemas.Task)
