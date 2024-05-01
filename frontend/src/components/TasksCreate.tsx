@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { API } from '../api';
-import { useMutation } from '@apollo/client'; // インポート修正
-import { Button, Stack, TextField } from "@mui/material"; // TextFieldを追加
+import { useMutation } from '@apollo/client';
+import { Button, Stack, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const TaskCreate = () => {
@@ -15,6 +15,10 @@ const TaskCreate = () => {
     const handleChange = (event) => {
         setTitle(event.target.value);
     }
+
+    const onBack = () => {
+      navigate('/');
+  }
     
     // 入力内容を送信
     const handleSubmit = async () => {
@@ -24,14 +28,12 @@ const TaskCreate = () => {
             status: status,
         });
         console.log('タスクを作成しました。', result);
+        onBack();
       } catch (error) {
         console.error('タスクを作成できませんでした。', error);
+        onBack();
       }
     };
-
-    const onBack = () => {
-        navigate('/');
-    }
 
     return (
         <>
@@ -41,6 +43,7 @@ const TaskCreate = () => {
                     label="title" 
                     value={title}
                     onChange={handleChange}
+                    autoFocus
                 />
                 <Button onClick={handleSubmit}>作成する</Button>        
                 <Button variant='contained' color='primary' onClick={onBack}>一覧に戻る</Button>               

@@ -25,7 +25,6 @@ const Tasks = () => {
         }
     });
 
-
     const onCreate = () => {
         navigate('/create');
 
