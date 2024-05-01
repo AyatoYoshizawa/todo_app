@@ -1,31 +1,95 @@
-import React from 'react';
 import { useQuery } from 'react-query';
-import { listRequestBuilder } from '../api/api/v1/tasks/list/index';
-
-const fetchTasks = async () => {
-    const tasks = await listRequestBuilder.get();
-    return tasks;
-}
+import { API } from '../api';
+import CircularProgress from '@mui/material/CircularProgress';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import { Task } from '../api/axios';
+import { Button, Stack } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 const Tasks = () => {
-    const { data: tasks, isLoading, error } = useQuery('tasks', fetchTasks);
+    const navigate = useNavigate();
+    
+    const query = useQuery<Array<Task>>('tasks', () => {
+        return API.instance.getTasksApiV1TasksListGet();
+    }, {
+        onSuccess(data) {
+            console.info('SUCCESS', data);
+        },
+        onError(err) {
+            console.error('ERROR', err);
+            window.alert(err);
+        }
+    });
 
-    if (isLoading) {
-        return <div>Now Loading...</div>;
+
+    const onCreate = () => {
+        navigate('/create');
+
     }
-    if (error) {
-        return <div>Error!: {error.message}</div>
+
+    const onEdit = (task: Task) => {
+        console.log('EDIT', task);
+        // todo    
+    }
+
+    const onDelete = (task: Task) => {
+        console.log('DELETE', task);
+        // todo    
     }
 
     return (
-        <div>
-            <h1>TodoList</h1>
-            <ul >
-                {tasks.map(task => (
-                    <li key={task.id}>{task.title}</li>
-                ))}
-            </ul>
-        </div>
+        <>
+            <h1>一覧</h1>
+
+            <Stack spacing={10} direction='row'>
+                <Button variant='contained' color='primary' onClick={onCreate}>新規登録</Button>
+            </Stack>
+
+            {query.isLoading || query.isFetching &&
+                <CircularProgress />
+            }
+
+            {query.isSuccess &&
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                ID
+                            </TableCell>
+                            <TableCell>
+                                Title
+                            </TableCell>
+                            <TableCell>
+                                <br />
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {query.data?.map(task =>
+                            <TableRow key={task.id}>
+                                <TableCell>
+                                    #{task.id}
+
+                                </TableCell>
+                                <TableCell>
+                                    {task.title}
+                                </TableCell>
+                                <TableCell>
+                                    <Stack spacing={10} direction='row'>
+                                        <Button variant='contained' color='primary' onClick={() => onEdit(task)}>編集</Button>
+                                        <Button variant='outlined' color="error" onClick={() => onDelete(task)}>削除</Button>
+                                    </Stack>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            }
+        </>
     )
 }
 

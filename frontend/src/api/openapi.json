@@ -36,9 +36,6 @@
                             "anyOf": [
                                 {
                                     "type": "string"
-                                },
-                                {
-                                    "type": "null"
                                 }
                             ],
                             "title": "Title"
@@ -52,9 +49,6 @@
                             "anyOf": [
                                 {
                                     "type": "integer"
-                                },
-                                {
-                                    "type": "null"
                                 }
                             ],
                             "title": "Status"

@@ -1,1 +1,0 @@
-kiota generate -l typescript -d openapi.json -c TodoAppClient -o ./frontend/src/api
