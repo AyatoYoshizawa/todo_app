@@ -1,6 +1,7 @@
 from typing import List, Optional
+import logging
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -18,6 +19,8 @@ app.add_middleware(
     allow_credentials=True,
 )
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 # DBセッションの依存性注入
 def get_db():
@@ -27,6 +30,12 @@ def get_db():
     finally:
         db.close()
 
+@app.middleware("http")
+async def log_request(request: Request, call_next):
+    logging.debug(f"Request: {request.method} {request.url} - Headers: {request.headers} - Body: {await request.body()}")
+
+    response = await call_next(request)
+    return response
 
 @app.get('/')
 def test():

@@ -7,33 +7,33 @@ import { useNavigate } from "react-router-dom";
 const TaskCreate = () => {
     const navigate = useNavigate();
 
-    const [title, setTitle] = useState('');
-    const statusInitValue = 0;
-    const status = statusInitValue;
+    const [titleAsState, setTitle] = useState('');
+    const [statusAsState, setStatus] = useState(0);
 
-    // 入力内容が変更されたらStateのtitleを変更
     const handleChange = (event) => {
-        setTitle(event.target.value);
-    }
+      setTitle(event.target.value);
+    };
 
     const onBack = () => {
       navigate('/');
-  }
+    };
     
     // 入力内容を送信
     const handleSubmit = async () => {
       try {
-        const result = await API.instance.createTaskApiV1TasksCreatePostRaw({
-            title: title,
-            status: status,
+        const result = await API.instance.createTaskApiV1TasksCreatePost({
+          taskCreate: {
+            title: titleAsState,
+            status, statusAsState,
+          }
         });
-        console.log('タスクを作成しました。', result);
+        console.log("タスクを作成しました。", result);
         onBack();
       } catch (error) {
-        console.error('タスクを作成できませんでした。', error);
+        console.error("タスクを作成できませんでした。", error),
         onBack();
       }
-    };
+    }
 
     return (
         <>
@@ -41,12 +41,12 @@ const TaskCreate = () => {
             <Stack spacing={10} direction='row'>
                 <TextField 
                     label="title" 
-                    value={title}
+                    value={titleAsState}
                     onChange={handleChange}
                     autoFocus
                 />
-                <Button onClick={handleSubmit}>作成する</Button>        
-                <Button variant='contained' color='primary' onClick={onBack}>一覧に戻る</Button>               
+                <Button onClick={handleSubmit}>作成する</Button>
+                <Button variant='contained' color='primary' onClick={onBack}>一覧に戻る</Button>
             </Stack>
         </>
     )
